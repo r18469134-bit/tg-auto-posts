@@ -1,23 +1,20 @@
-name: Разместите RSS-ленту в Telegram
+- name: Setup Python
+    uses: actions/setup-python@v4
+    with:
+      python-version: "3.11"
 
-on:
-  workflow_dispatch: {}
-  schedule:
-    - cron: "0 * * * *"   # запуск каждый час (пример)
+  - name: Install requirements
+    run: |
+      if [ -f requirements.txt ]; then
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      fi
 
-jobs:
-  post:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  - name: Run post script
+    env:
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}  # удалить/поменять, если не нужен
+    run: |
+      python post.py
+ 
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-
-      - name: Run post script
-        run: |
-          # здесь оставь свой скрипт (всё, что было в run:)
-          ...
+ 
